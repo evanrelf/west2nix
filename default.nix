@@ -2,6 +2,13 @@
 
 westYml:
 
+# TODO: When `hashes` is empty, instruct the user to run a prepared
+# `nix-prefetch-git` script and copy the output into the attribute set. Or
+# something like that. Basically just automate it because doing it manually is
+# so painful.
+{ hashes ? { }
+}:
+
 let
   yaml2json = yaml:
     let
@@ -44,12 +51,16 @@ let
 
   fetchProject = project:
     let
-      src = pkgs.fetchgit
-        ({
-          url = resolveUrl project;
-          hash = "";
-        } // pkgs.lib.optionalAttrs (project ? revision) {
-          rev = project.revision;
+      src =
+        (pkgs.fetchgit
+          ({
+            url = resolveUrl project;
+            sha256 = hashes.${project.name} or pkgs.lib.fakeSha256;
+          } // pkgs.lib.optionalAttrs (project ? revision) {
+            rev = project.revision;
+          })
+        ).overrideAttrs (_: {
+          name = "west2nix-fetchgit-${project.name}";
         });
     in
     pkgs.runCommand "west2nix-fetch-project-${project.name}" { } ''
