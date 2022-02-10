@@ -1,7 +1,7 @@
 let
   pkgs = import <nixpkgs> { };
 
-  west2nix = import ./default.nix { inherit pkgs; };
+  west2nix = pkgs.callPackage ./default.nix { };
 
   zephyr =
     pkgs.fetchFromGitHub {
