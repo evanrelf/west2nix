@@ -1,7 +1,5 @@
 # west2nix
 
-_Work in progress_
-
 Import west manifest files into Nix
 
 - west: https://github.com/zephyrproject-rtos/west
