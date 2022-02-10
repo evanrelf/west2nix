@@ -54,6 +54,7 @@ let
       else
         "${url-base}/${project.name}.git";
 
+  # TODO: Fetch imported projects recursively
   fetchProject = project:
     let
       src =
